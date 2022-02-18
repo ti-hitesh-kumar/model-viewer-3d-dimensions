@@ -287,6 +287,8 @@
 
 			let selectModel = document.getElementById("models-3d");
 
+			console.log(window.location);
+
 			selectModel.addEventListener("change", ( evt ) => {
 
 				modelViewer.src = `${window.location.origin}/asset/models/${evt.target.value}`;
