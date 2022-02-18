@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Model Viewer 3D Dimensions</title>
+
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+
+		<style type="text/css">
+			model-viewer {
+				width: 100%;
+				height: 600px;
+				border: 5px solid #dee2e6 !important;
+			}
+
+			#controls {
+				position: absolute;
+				bottom: 16px;
+				left: 16px;
+				max-width: unset;
+				transform: unset;
+			}
+
+			.dot{
+				display: block;
+				width: 20px;
+				height: 20px;
+				border-radius: 70%;
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+				background: #fff;
+				--min-hotspot-opacity: 0;
+				opacity: 0;
+			}
+
+			.dim{
+				background: #fff;
+				border-radius: 25px;
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+				color: rgba(0, 0, 0, 0.8);
+				display: block;
+				font-family: Futura, Helvetica Neue, sans-serif;
+				font-size: 10px;
+				font-weight: 400;
+				max-width: 128px;
+				overflow-wrap: break-word;
+				padding: 0.5em 1em;
+				position: absolute;
+				width: max-content;
+				height: max-content;
+				transform: translate3d(-50%, -50%, 0);
+			}
+
+			.dim-up-div {
+				--min-hotspot-opacity: 0;
+			}
+
+			.show{
+				--min-hotspot-opacity: 1;
+			}
+
+			.hide{
+				display: none;
+			}
+			/* This keeps child nodes hidden while the element loads */
+			:not(:defined) > * {
+				display: none;
+			}
+		</style>
+
+	</head>
+
+	<body>
+
+		<div class="container my-5">
+
+			<div class="row">
+
+				<div class="col-12">
+					<div class="form-group">
+						<label for="models-3d">Select Model</label>
+						<select class="form-control" id="models-3d">
+							<option value="chair-1.glb">Chair 1</option>
+							<option value="chair-2.glb">Chair 2</option>
+							<option value="chair-3.glb">Chair 3</option>
+							<option value="astronaut.glb">Astronaut</option>
+							<option value="shofa-1.glb">Shofa 1</option>
+							<option value="shofa-2.glb">Shofa 2</option>
+							<option value="toy-train.glb">Toy Train</option>
+							<option value="metall-regal.glb">Metall Regal</option>
+							<option value="table-1.glb">Table 1</option>
+							<option value="box-table.glb">Box Table</option>
+						</select>
+					</div>
+				</div>
+
+
+				<div class="col-12">
+
+					<model-viewer
+						id="dimension-demo"
+						src="asset/models/chair-1.glb"
+						environment-image="asset/models/environment_blur.hdr"
+						exposure="5"
+						shadow-intensity="1"
+						shadow-softness="1"
+						exposure="5"
+						camera-orbit
+						camera-controls
+					></model-viewer>
+
+				</div>
+			</div>
+
+		</div>
+
+		<script src="https://unpkg.com/focus-visible@5.1.0/dist/focus-visible.js"></script>
+		<script type="module" src="https://unpkg.com/@google/model-viewer@1.10.1/dist/model-viewer.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
+
+		<script type="module">
+
+			import * as THREE from './asset/js/three.module.js';
+			import { LineGeometry } from './asset/js/LineGeometry.js';
+			import { LineMaterial } from './asset/js/LineMaterial.js';
+
+			const modelViewer = document.querySelector('#dimension-demo');
+
+			let scene, camera;
+			let meshs = [];
+
+			modelViewer.addEventListener('load', () => {
+				const center = modelViewer.getCameraTarget();
+				const size = modelViewer.getDimensions();
+				const x2 = size.x / 2;
+				const y2 = size.y / 2;
+				const z2 = size.z / 2;
+
+				const symbolKey = Reflect.ownKeys(modelViewer.model).find(key => key.toString() === 'Symbol(threeScene)');
+				// const symbolKey = Object.getOwnPropertySymbols(modelViewer).find(x => x.description === "scene");
+
+				scene = modelViewer.model[symbolKey];
+				camera = scene.parent.parent.parent.camera;
+
+				const mesh = scene.getObjectByProperty("type", "Mesh");
+
+				let originSpace = 0.02;
+				let padding = 0.05;
+
+				let depthObj = {
+					dir: new THREE.Vector3( 0, 0, -1 ),
+					length: size.z - originSpace,
+					position: {
+						x: center.x - ( x2 + padding ),
+						y: center.y - y2,
+						z: center.z + ( z2 - originSpace),
+					},
+				}
+
+				let heightObj = {
+					dir: new THREE.Vector3( 0, 1, 0 ),
+					length: size.y - originSpace,
+					position: {
+						x: center.x - ( x2 + padding ),
+						y: center.y - ( y2 - originSpace ),
+						z: center.z + ( z2 + padding ),
+					},
+				}
+
+				let widthObj = {
+					dir: new THREE.Vector3( 1, 0, 0 ),
+					length: size.x - originSpace,
+					position: {
+						x: center.x - ( x2 - originSpace ),
+						y: center.y - y2,
+						z: center.z + ( z2 + padding ),
+					},
+				}
+
+				drawLine( depthObj );
+				drawLine( heightObj );
+				drawLine( widthObj );
+
+				addLables({
+					x: center.x,
+					y: center.y - y2,
+					z: center.z + ( z2 + padding + 0.001),
+				}, `${(size.x * 100).toFixed(0)} cm`);
+
+				addLables({
+					x: center.x - ( x2 + padding + 0.001 ),
+					y: center.y,
+					z: center.z + ( z2 + padding + 0.001 ),
+				}, `${(size.y * 100).toFixed(0)} cm`);
+
+				addLables({
+					x: center.x - ( x2 + padding + 0.01 ),
+					y: center.y - y2,
+					z: center.z,
+				}, `${(size.z * 100).toFixed(0)} cm`);
+			});
+
+			function addLables(position, text) {
+				let opt = {
+					font: "sans-serif",
+					canvasWidth: 300,
+					canvasHeight: 100,
+					fontSize: 40,
+					textColor: "#0000FF",
+					bgColor: "#C0C0C0",
+					textAlign: "center",
+					text: text,
+					transparent: false,
+					opacity: 1,
+				};
+
+				let cv = document.createElement("canvas");
+				cv.setAttribute("width", opt.canvasWidth);
+				cv.setAttribute("height", opt.canvasHeight);
+
+				let ctx = cv.getContext("2d");
+				ctx.scale(2, 2);
+
+				if ( opt.bgColor ) {
+					ctx.fillStyle = opt.bgColor;
+					ctx.fillRect( 0, 0, cv.width, cv.height);
+				}
+
+				ctx.fillStyle = opt.textColor;
+
+				ctx.textAlign = opt.textAlign;
+				ctx.textBaseline = "middle";
+				ctx.font = `bold ${opt.fontSize}px ${opt.font}`;
+				ctx.fillText(opt.text, cv.width/4, cv.height/4);
+
+				const texture = new THREE.CanvasTexture( cv );
+				texture.minFilter = THREE.LinearFilter;
+
+				var canvasAspectRatio = texture.image.height / texture.image.width;
+				let planeWidth = camera.far * 0.04;
+				const geometry = new THREE.PlaneGeometry( planeWidth, canvasAspectRatio * planeWidth );
+				const material = new THREE.MeshBasicMaterial( {
+					side: THREE.DoubleSide,
+					map: texture,
+					transparent: true,
+				} );
+
+				let mesh = new THREE.Mesh( geometry, material );
+				mesh.position.set(position.x, position.y, position.z);
+				meshs.push(mesh);
+				scene.add(mesh);
+			}
+
+			modelViewer.addEventListener('camera-change', (event) => {
+				meshs.forEach(function(element, index, array){
+
+					element.setRotationFromQuaternion(camera.quaternion);
+
+				});
+			});
+
+			function drawLine( obj ) {
+
+				let dir = obj.dir;
+				let length = obj.length;
+				let position = obj.position;
+
+				let hex = 0xff0000;
+
+				let origin = new THREE.Vector3( 0, 0, 0 );
+
+				//normalize the direction vector (convert to vector of length 1)
+				dir.normalize();
+				// const plane = new THREE.Plane( dir, -length );
+				// const planeHelper = new THREE.PlaneHelper( plane, 0, 0xff0000 );
+				// planeHelper.position.set( position.x, position.y, position.z );
+				// scene.add( planeHelper );
+
+				const arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
+				arrowHelper.setLength(length, 0, 0);
+				arrowHelper.position.set( position.x, position.y, position.z );
+				scene.add( arrowHelper );
+
+			}
+
+			let selectModel = document.getElementById("models-3d");
+
+			selectModel.addEventListener("change", ( evt ) => {
+
+				modelViewer.src = `${window.location.origin}/asset/models/${evt.target.value}`;
+
+			} );
+
+		</script>
+
+	</body>
+
+</html>
