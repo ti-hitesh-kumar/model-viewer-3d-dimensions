@@ -291,7 +291,16 @@
 
 			selectModel.addEventListener("change", ( evt ) => {
 
-				modelViewer.src = `${window.location.origin}/asset/models/${evt.target.value}`;
+				var baseUrl;
+
+				if ( window.location.origin == "https://ti-hitesh-kumar.github.io" ) {
+					baseUrl = "https://ti-hitesh-kumar.github.io/model-viewer-3d-dimensions";
+				} else {
+					baseUrl = window.location.origin;
+				}
+
+
+				modelViewer.src = `${baseUrl}/asset/models/${evt.target.value}`;
 
 			} );
 
