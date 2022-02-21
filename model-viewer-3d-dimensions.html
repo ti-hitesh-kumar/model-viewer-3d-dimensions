@@ -146,34 +146,33 @@
 
 				const mesh = scene.getObjectByProperty("type", "Mesh");
 
-				let originSpace = 0.02;
-				let padding = 0.05;
+				let padding = 0.07;
 
 				let depthObj = {
 					dir: new THREE.Vector3( 0, 0, -1 ),
-					length: size.z - originSpace,
+					length: size.z,
 					position: {
 						x: center.x - ( x2 + padding ),
 						y: center.y - y2,
-						z: center.z + ( z2 - originSpace),
+						z: center.z + z2,
 					},
 				}
 
 				let heightObj = {
 					dir: new THREE.Vector3( 0, 1, 0 ),
-					length: size.y - originSpace,
+					length: size.y,
 					position: {
 						x: center.x - ( x2 + padding ),
-						y: center.y - ( y2 - originSpace ),
+						y: center.y - y2,
 						z: center.z + ( z2 + padding ),
 					},
 				}
 
 				let widthObj = {
 					dir: new THREE.Vector3( 1, 0, 0 ),
-					length: size.x - originSpace,
+					length: size.x,
 					position: {
-						x: center.x - ( x2 - originSpace ),
+						x: center.x - x2,
 						y: center.y - y2,
 						z: center.z + ( z2 + padding ),
 					},
@@ -196,7 +195,7 @@
 				}, `${(size.y * 100).toFixed(0)} cm`);
 
 				addLables({
-					x: center.x - ( x2 + padding + 0.01 ),
+					x: center.x - ( x2 + padding + 0.001 ),
 					y: center.y - y2,
 					z: center.z,
 				}, `${(size.z * 100).toFixed(0)} cm`);
@@ -239,12 +238,12 @@
 				texture.minFilter = THREE.LinearFilter;
 
 				var canvasAspectRatio = texture.image.height / texture.image.width;
-				let planeWidth = camera.far * 0.04;
+				let planeWidth = camera.far * 0.03;
 				const geometry = new THREE.PlaneGeometry( planeWidth, canvasAspectRatio * planeWidth );
 				const material = new THREE.MeshBasicMaterial( {
 					side: THREE.DoubleSide,
 					map: texture,
-					transparent: true,
+					transparent: false,
 				} );
 
 				let mesh = new THREE.Mesh( geometry, material );
@@ -287,8 +286,6 @@
 
 			let selectModel = document.getElementById("models-3d");
 
-			console.log(window.location);
-
 			selectModel.addEventListener("change", ( evt ) => {
 
 				var baseUrl;
@@ -298,8 +295,6 @@
 				} else {
 					baseUrl = window.location.origin;
 				}
-
-				console.log("Base URL:", baseUrl);
 
 				modelViewer.src = `${baseUrl}/asset/models/${evt.target.value}`;
 
