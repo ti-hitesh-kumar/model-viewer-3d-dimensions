@@ -146,7 +146,9 @@
 
 				const mesh = scene.getObjectByProperty("type", "Mesh");
 
-				let padding = 0.07;
+				let padding = camera.far * 0.015;
+
+				console.log('padding', padding);
 
 				let depthObj = {
 					dir: new THREE.Vector3( 0, 0, -1 ),
@@ -182,20 +184,22 @@
 				drawLine( heightObj );
 				drawLine( widthObj );
 
+				let labelSpace = 0.001;
+
 				addLables({
 					x: center.x,
 					y: center.y - y2,
-					z: center.z + ( z2 + padding + 0.001),
+					z: center.z + ( z2 + padding + labelSpace),
 				}, `${(size.x * 100).toFixed(0)} cm`);
 
 				addLables({
-					x: center.x - ( x2 + padding + 0.001 ),
+					x: center.x - ( x2 + padding + labelSpace ),
 					y: center.y,
-					z: center.z + ( z2 + padding + 0.001 ),
+					z: center.z + ( z2 + padding + labelSpace ),
 				}, `${(size.y * 100).toFixed(0)} cm`);
 
 				addLables({
-					x: center.x - ( x2 + padding + 0.001 ),
+					x: center.x - ( x2 + padding + labelSpace ),
 					y: center.y - y2,
 					z: center.z,
 				}, `${(size.z * 100).toFixed(0)} cm`);
