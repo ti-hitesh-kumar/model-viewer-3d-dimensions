@@ -182,22 +182,80 @@
 				drawLine( heightObj );
 				drawLine( widthObj );
 
-				let labelSpace = 0.001;
+				drawLine({
+					dir: new THREE.Vector3( 0, 0, 1 ),
+					length: 0.04,
+					position: {
+						x: center.x - x2,
+						y: center.y - y2,
+						z: center.z + z2 + 0.03,
+					},
+				});
+
+				drawLine({
+					dir: new THREE.Vector3( 0, 0, 1 ),
+					length: 0.04,
+					position: {
+						x: center.x + x2,
+						y: center.y - y2,
+						z: center.z + z2 + 0.03,
+					},
+				});
+
+				drawLine({
+					dir: new THREE.Vector3( -1, 0, 0 ),
+					length: 0.04,
+					position: {
+						x: center.x - x2 - 0.03,
+						y: center.y - y2,
+						z: center.z + z2,
+					},
+				});
+
+				drawLine({
+					dir: new THREE.Vector3( -1, 0, 0 ),
+					length: 0.04,
+					position: {
+						x: center.x - x2 - 0.03,
+						y: center.y - y2,
+						z: center.z - z2,
+					},
+				});
+
+				drawLine({
+					dir: new THREE.Vector3( -1.57, 0, 1.57 ),
+					length: 0.06,
+					position: {
+						x: center.x - x2 - 0.03,
+						y: center.y - y2,
+						z: center.z + z2 + 0.03,
+					},
+				});
+
+				drawLine({
+					dir: new THREE.Vector3( -1.57, 0, 1.57 ),
+					length: 0.06,
+					position: {
+						x: center.x - x2  - 0.03,
+						y: center.y + y2,
+						z: center.z + z2  + 0.03,
+					},
+				});
 
 				addLables({
 					x: center.x,
 					y: center.y - y2,
-					z: center.z + ( z2 + padding + labelSpace),
+					z: center.z + ( z2 + padding ),
 				}, `${(size.x * 100).toFixed(0)} cm`);
 
 				addLables({
-					x: center.x - ( x2 + padding + labelSpace ),
+					x: center.x - ( x2 + padding ),
 					y: center.y,
-					z: center.z + ( z2 + padding + labelSpace ),
+					z: center.z + ( z2 + padding ),
 				}, `${(size.y * 100).toFixed(0)} cm`);
 
 				addLables({
-					x: center.x - ( x2 + padding + labelSpace ),
+					x: center.x - ( x2 + padding ),
 					y: center.y - y2,
 					z: center.z,
 				}, `${(size.z * 100).toFixed(0)} cm`);
@@ -209,7 +267,7 @@
 					canvasWidth: 300,
 					canvasHeight: 100,
 					fontSize: 40,
-					textColor: "#0000FF",
+					textColor: "#000000",
 					bgColor: "#ffffff",
 					textAlign: "center",
 					text: text,
@@ -354,7 +412,7 @@
 				let length = obj.length;
 				let position = obj.position;
 
-				let hex = 0xff0000;
+				let hex = 0xA9A9A9;
 
 				let origin = new THREE.Vector3( 0, 0, 0 );
 
