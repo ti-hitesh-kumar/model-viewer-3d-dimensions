@@ -182,31 +182,34 @@
 				drawLine( heightObj );
 				drawLine( widthObj );
 
+				let paddingForEdges = cameraFar(0.009);
+				let lengthForEdges = cameraFar(0.016);
+
 				drawLine({
 					dir: new THREE.Vector3( 0, 0, 1 ),
-					length: 0.04,
+					length: lengthForEdges,
 					position: {
 						x: center.x - x2,
 						y: center.y - y2,
-						z: center.z + z2 + 0.03,
+						z: center.z + z2 + paddingForEdges,
 					},
 				});
 
 				drawLine({
 					dir: new THREE.Vector3( 0, 0, 1 ),
-					length: 0.04,
+					length: lengthForEdges,
 					position: {
 						x: center.x + x2,
 						y: center.y - y2,
-						z: center.z + z2 + 0.03,
+						z: center.z + z2 + paddingForEdges,
 					},
 				});
 
 				drawLine({
 					dir: new THREE.Vector3( -1, 0, 0 ),
-					length: 0.04,
+					length: lengthForEdges,
 					position: {
-						x: center.x - x2 - 0.03,
+						x: center.x - x2 - paddingForEdges,
 						y: center.y - y2,
 						z: center.z + z2,
 					},
@@ -214,9 +217,9 @@
 
 				drawLine({
 					dir: new THREE.Vector3( -1, 0, 0 ),
-					length: 0.04,
+					length: lengthForEdges,
 					position: {
-						x: center.x - x2 - 0.03,
+						x: center.x - x2 - paddingForEdges,
 						y: center.y - y2,
 						z: center.z - z2,
 					},
@@ -224,21 +227,21 @@
 
 				drawLine({
 					dir: new THREE.Vector3( -1.57, 0, 1.57 ),
-					length: 0.06,
+					length: lengthForEdges,
 					position: {
-						x: center.x - x2 - 0.03,
+						x: center.x - x2 - paddingForEdges,
 						y: center.y - y2,
-						z: center.z + z2 + 0.03,
+						z: center.z + z2 + paddingForEdges,
 					},
 				});
 
 				drawLine({
 					dir: new THREE.Vector3( -1.57, 0, 1.57 ),
-					length: 0.06,
+					length: lengthForEdges,
 					position: {
-						x: center.x - x2  - 0.03,
+						x: center.x - x2  - paddingForEdges,
 						y: center.y + y2,
-						z: center.z + z2  + 0.03,
+						z: center.z + z2  + paddingForEdges,
 					},
 				});
 
