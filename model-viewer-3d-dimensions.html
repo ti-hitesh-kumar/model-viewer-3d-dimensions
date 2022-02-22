@@ -146,9 +146,7 @@
 
 				const mesh = scene.getObjectByProperty("type", "Mesh");
 
-				let padding = camera.far * 0.015;
-
-				console.log('padding', padding);
+				let padding = cameraFar(0.015);
 
 				let depthObj = {
 					dir: new THREE.Vector3( 0, 0, -1 ),
@@ -212,7 +210,7 @@
 					canvasHeight: 100,
 					fontSize: 40,
 					textColor: "#0000FF",
-					bgColor: "#C0C0C0",
+					bgColor: "#ffffff",
 					textAlign: "center",
 					text: text,
 					transparent: false,
@@ -241,9 +239,59 @@
 				const texture = new THREE.CanvasTexture( cv );
 				texture.minFilter = THREE.LinearFilter;
 
+				// const geometry = new THREE.PlaneGeometry( planeWidth, planeHeight );
+				// const material = new THREE.MeshBasicMaterial( {
+				// 	side: THREE.DoubleSide,
+				// 	map: texture,
+				// 	transparent: false,
+				// } );
+
 				var canvasAspectRatio = texture.image.height / texture.image.width;
-				let planeWidth = camera.far * 0.03;
-				const geometry = new THREE.PlaneGeometry( planeWidth, canvasAspectRatio * planeWidth );
+				let planeWidth = cameraFar(0.03);
+				let planeHeight = canvasAspectRatio * planeWidth;
+
+				var aspectRatioRational = aspectRatio(canvasAspectRatio);
+
+				let x = 0; let y = 0; let width = planeWidth; let height = planeHeight; let radius = cameraFar(0.0051);
+				let shape = new THREE.Shape();
+				shape.moveTo( x, y + radius );
+				shape.lineTo( x, y + height - radius );
+				shape.quadraticCurveTo( x, y + height, x + radius, y + height );
+				shape.lineTo( x + width - radius, y + height );
+				shape.quadraticCurveTo( x + width, y + height, x + width, y + height - radius );
+				shape.lineTo( x + width, y + radius );
+				shape.quadraticCurveTo( x + width, y, x + width - radius, y );
+				shape.lineTo( x + radius, y );
+				shape.quadraticCurveTo( x, y, x, y + radius );
+
+				const geometry = new THREE.ShapeGeometry( shape ); 
+				geometry.center();
+
+				var uvAttribute = geometry.attributes.uv;
+				let min = Infinity, max = 0
+				//find min max
+				for (var i = 0; i < uvAttribute.count; i++) {
+					let u = uvAttribute.getX(i);
+					let v = uvAttribute.getY(i);
+					min = Math.min(min, u, v)
+					max = Math.max(max, u, v)
+				}
+
+				//map min map to aspect ration
+				for (var i = 0; i < uvAttribute.count; i++) {
+
+					let u = uvAttribute.getX(i);
+					let v = uvAttribute.getY(i);
+
+					// do something with uv
+					u = THREE.MathUtils.mapLinear(u, min, max, 0, aspectRatioRational[0]);
+					v = THREE.MathUtils.mapLinear(v, min, max, 0, aspectRatioRational[1]);
+
+					// write values back to attribute
+					uvAttribute.setXY(i, u, v);
+
+				}
+
 				const material = new THREE.MeshBasicMaterial( {
 					side: THREE.DoubleSide,
 					map: texture,
@@ -263,6 +311,42 @@
 
 				});
 			});
+
+			function cameraFar( value ) {
+				return camera.far * value;
+			}
+
+			function aspectRatio(val) {
+
+				let lim = 50;
+
+				var lower = [0, 1];
+				var upper = [1, 0];
+
+				while (true) {
+					var mediant = [lower[0] + upper[0], lower[1] + upper[1]];
+
+					if (val * mediant[1] > mediant[0]) {
+						if (lim < mediant[1]) {
+							return upper;
+						}
+						lower = mediant;
+					} else if (val * mediant[1] == mediant[0]) {
+						if (lim >= mediant[1]) {
+							return mediant;
+						}
+						if (lower[1] < upper[1]) {
+							return lower;
+						}
+						return upper;
+					} else {
+						if (lim < mediant[1]) {
+							return lower;
+						}
+						upper = mediant;
+					}
+				}
+			}
 
 			function drawLine( obj ) {
 
