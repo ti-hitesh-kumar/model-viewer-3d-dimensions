@@ -295,7 +295,7 @@
 
 				ctx.textAlign = opt.textAlign;
 				ctx.textBaseline = "middle";
-				ctx.font = `bold ${opt.fontSize}px ${opt.font}`;
+				ctx.font = `400 ${opt.fontSize}px ${opt.font}`;
 				ctx.fillText(opt.text, cv.width/4, cv.height/4);
 
 				const texture = new THREE.CanvasTexture( cv );
