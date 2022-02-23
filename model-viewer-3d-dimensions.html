@@ -267,7 +267,7 @@
 
 			function addLables(position, text) {
 				let opt = {
-					font: "sans-serif",
+					font: "Brandon Text",
 					canvasWidth: 300,
 					canvasHeight: 100,
 					fontSize: 40,
@@ -295,7 +295,7 @@
 
 				ctx.textAlign = opt.textAlign;
 				ctx.textBaseline = "middle";
-				ctx.font = `400 ${opt.fontSize}px ${opt.font}`;
+				ctx.font = `500 ${opt.fontSize}px ${opt.font}`;
 				ctx.fillText(opt.text, cv.width/4, cv.height/4);
 
 				const texture = new THREE.CanvasTexture( cv );
@@ -314,7 +314,7 @@
 
 				var aspectRatioRational = aspectRatio(canvasAspectRatio);
 
-				let x = 0; let y = 0; let width = planeWidth; let height = planeHeight; let radius = cameraFar(0.0051);
+				let x = 0; let y = cameraFar(0.001); let width = planeWidth; let height = planeHeight; let radius = cameraFar(0.0051);
 				let shape = new THREE.Shape();
 				shape.moveTo( x, y + radius );
 				shape.lineTo( x, y + height - radius );
@@ -416,7 +416,7 @@
 				let length = obj.length;
 				let position = obj.position;
 
-				let hex = 0xC9C6C0;
+				let hex = 0x989898;
 
 				let origin = new THREE.Vector3( 0, 0, 0 );
 
