@@ -184,6 +184,7 @@
 				drawLine( widthObj );
 
 				let paddingForEdges = cameraFar(0.0025);
+				let paddingForEdgesY = cameraFar(0.0018);
 				let lengthForEdges = cameraFar(0.005);
 
 				drawLine({
@@ -227,22 +228,22 @@
 				});
 
 				drawLine({
-					dir: new THREE.Vector3( 0, 0, 1 ),
+					dir: new THREE.Vector3( 1, 0, 1 ),
 					length: lengthForEdges,
 					position: {
-						x: center.x - x2 - padding,
+						x: center.x - x2 - padding - paddingForEdgesY,
 						y: center.y - y2,
-						z: center.z + z2 + padding - paddingForEdges,
+						z: center.z + z2 + padding - paddingForEdgesY,
 					},
 				});
 
 				drawLine({
-					dir: new THREE.Vector3( 0, 0, 1 ),
+					dir: new THREE.Vector3( 1, 0, 1 ),
 					length: lengthForEdges,
 					position: {
-						x: center.x - x2  - padding,
+						x: center.x - x2  - padding - paddingForEdgesY,
 						y: center.y + y2,
-						z: center.z + z2  + padding - paddingForEdges,
+						z: center.z + z2  + padding - paddingForEdgesY,
 					},
 				});
 
